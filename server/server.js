@@ -1,6 +1,12 @@
+import dns from "dns";
+dns.setServers(["1.1.1.1"]);
+
 import express from "express";
 import "dotenv/config";
 import cors from "cors";
+import connectDB from "./configs/db.js";
+
+connectDB();
 
 const app = express();
 // enables cross-origin resource sharing
