@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
+import crypto from "crypto";
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     _id: {
       type: String,
-      required: true,
+      default: () => crypto.randomUUID(),
     },
     username: {
       type: String,
@@ -13,6 +14,15 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: [true, 'Password is required.'],
+      minlength: [8, 'Password must be at least 8 characters long.'],
+      select: false,
     },
     image: {
       type: String,
@@ -24,7 +34,8 @@ const userSchema = mongoose.Schema(
       default: "user",
     },
     recentSearchedCities: {
-      type: String,
+      type: [String],
+      default: [],
       required: true,
     },
   },
