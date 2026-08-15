@@ -1,7 +1,8 @@
 // GET /api/user/
 export const getUserData = async (req, res) => {
   try {
-    const { _id, username, email, image, role, recentSearchedCities } = req.user;
+    const { _id, username, email, image, role, recentSearchedCities } =
+      req.user;
     res.json({
       success: true,
       user: { id: _id, username, email, image, role, recentSearchedCities },

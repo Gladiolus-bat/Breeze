@@ -6,11 +6,15 @@ const createUser = async (req, res) => {
     const { email, password, username } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
 
     if (password.length < 8) {
-      return res.status(400).json({ message: "Password must be at least 8 characters long" });
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 8 characters long" });
     }
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
@@ -32,7 +36,9 @@ const createUser = async (req, res) => {
       username: createdUser.username,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error creating user", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error creating user", error: error.message });
   }
 };
 

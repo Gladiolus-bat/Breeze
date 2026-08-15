@@ -9,7 +9,9 @@ const protect = async (req, res, next) => {
       : req.headers["x-auth-token"]; // fallback if client still sends this header
 
   if (!token) {
-    return res.status(401).json({ message: "No token provided, authorization denied" });
+    return res
+      .status(401)
+      .json({ message: "No token provided, authorization denied" });
   }
 
   try {
@@ -28,11 +30,16 @@ const protect = async (req, res, next) => {
 };
 
 // Restricted to Hotel Owner (Admin)
-export const restrictTo = (...roles) => (req, res, next) => {
-  if (!req.user || !roles.includes(req.user.role)) {
-    return res.status(403).json({ success: false, message: "You are not authorized to perform this action" });
-  }
-  next();
-};
+export const restrictTo =
+  (...roles) =>
+  (req, res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to perform this action",
+      });
+    }
+    next();
+  };
 
 export default protect;
