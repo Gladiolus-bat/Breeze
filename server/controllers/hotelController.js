@@ -9,6 +9,11 @@ export const registerHotel = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    const existingHotel = await Hotel.findOne({owner: req.user._id});
+    if (existingHotel) {
+      return res.status(400).json({ success: false, message: "You have already registered a hotel" });
+    }
+
     const hotel = await Hotel.create({
       name,
       address,
