@@ -20,13 +20,15 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'Password is required.'],
-      minlength: [8, 'Password must be at least 8 characters long.'],
+      required: [true, "Password is required."],
+      minlength: [8, "Password must be at least 8 characters long."],
       select: false,
     },
     image: {
       type: String,
-      required: true,
+      default: function () {
+        return `https://ui-avatars.com/api/?name=${this.username || this.email}`;
+      },
     },
     role: {
       type: String,

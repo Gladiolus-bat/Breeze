@@ -10,7 +10,7 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
-    // password has `select: false` on the schema now, so pull it in explicitly
+    // password has `select: false` on the schema, so it is pulled in explicitly
     const user = await User.findOne({ email: email.toLowerCase() }).select("+password");
 
     const isMatched = user ? await bcrypt.compare(password, user.password) : false;

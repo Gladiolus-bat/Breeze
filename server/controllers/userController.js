@@ -1,10 +1,13 @@
 // GET /api/user/
 export const getUserData = async (req, res) => {
   try {
-    const { role, recentSearchedCities } = req.user;
-    res.json({ success: true, role, recentSearchedCities });
+    const { _id, username, email, image, role, recentSearchedCities } = req.user;
+    res.json({
+      success: true,
+      user: { id: _id, username, email, image, role, recentSearchedCities },
+    });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
