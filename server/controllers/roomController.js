@@ -77,3 +77,28 @@ export const getOwnerRooms = async (req, res) => {
     }
 };
 
+// POST /api/rooms/toggle-availability (admin only)
+export const toggleRoomAvailability = async (req, res) => {
+    try {
+        const {roomId} = req.body;
+        if (!roomId) {
+            return res.status(400).json({success: false, message: "Room Id required."});
+        }
+
+        const room = await Room.findById(roomId).populate("hotel");
+        if (!room) {
+            return res.status(404).json({success: false, message: "Room not found."});
+        }
+
+        if (room.hotel.owner !== req.user._id) {
+            return res.status(403).json({success: false, message: "You do not own this room."});
+        }
+
+        room.isAvailable = !room.isAvailable;
+        await room.save();
+
+        res.json({success: true, message: "Room availability updated ", room});
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message});
+    }
+};
