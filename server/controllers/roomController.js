@@ -47,3 +47,33 @@ export const createRoom = async (req, res) => {
     }
 };
 
+// GET /api/rooms (shows available room)
+export const getRooms = async (req, res) => {
+    try {
+        const rooms = await Room.find({isAvailable: true}).populate ({
+            path: "hotel",
+            populate: {path: "owner", select: "username image"},
+        }).sort({createdAt: -1});
+
+        res.json({success: true, rooms});
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message});
+    }
+};
+
+// GET /api/rooms/owner (Admin only for their own hotel)
+export const getOwnerRooms = async (req, res) => {
+    try {
+        const hotel = await Hotel.findOne({owner: req.user._id});
+        if (!hotel) {
+            return res.status(404).json({success: false, message: "No hotel found for this account"});
+        }
+
+        const rooms = (await Room.find({hotel: hotel._id}).populate("hotel")).toSorted({createdAt: -1});
+
+        res.json({success: true, rooms});
+    } catch (error) {
+        res.status(500).json({success: false, message:error.message});
+    }
+};
+
