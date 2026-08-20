@@ -1,11 +1,34 @@
-import React from 'react'
+import { useAuth } from "./context/AuthContext";
+import AuthPage from "./components/auth/AuthPage";
 
 const App = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  const {isAuthenticated, loading, user, logout} = useAuth();
 
-export default App
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-500">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <AuthPage/>
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-tertiary px-4">
+      <h1 className="text-2xl font-playfair text-primary">
+        Welcome, {user.username || user.email}
+      </h1>
+      <p className="text-gray-600">Role: {user.role}</p>
+      <button
+      onClick={logout}
+      className="bg-primary text-white rounded-lg px-4 py-2 hover:opacity-90 transition">
+        Log Out
+      </button>
+    </div>
+  );
+};
+
+export default App;
