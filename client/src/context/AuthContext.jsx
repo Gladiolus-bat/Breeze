@@ -27,4 +27,55 @@ export const AuthProvider = ({children}) => {
         localStorage.removeItem(TOKEN_KEY);
         localStorage.removeItem(USER_KEY);
     };
-}
+
+    // Confirm if any stored token is still valid and refresh the fields the server tracks
+    useEffect(() => {
+        const verify = async () => {
+            if (!token) {
+                setLoading(false);
+                return;
+            }
+            try {
+                const data = await fetchCurrentUser(token);
+                setUser((prev) => {
+                    const merged = {
+                        ...prev,
+                        role: data.role,
+                        recentSearchedCities: data.recentSearchedCities,
+                    };
+                    localStorage.setItem(USER_KEY, JSON.stringify(merged));
+                    return merged;
+                });
+            } catch (error) {
+                // if token is expired, invalid, or user no longer exists
+                logout();
+            } finally {
+                setLoading(false);
+            }
+        };
+        verify();
+    }, []);
+
+    const login = async ({email, password}) => {
+        const data = await loginUse({email, password});
+        persistSession(data.token, data.user);
+        return data.user;
+    };
+
+    const register = async ({email, password, username}) => {
+        await registerUser({email, password, username});
+        return login({email, password});
+    };
+
+    const value = {
+        user,  token, isAuthenticated: Boolean(token && user), loading, login, register, logout,
+    };
+
+    return <AuthContext.Provider value = {value}> {children} </AuthContext.Provider>;
+};
+
+export const useAuth = () => {
+    const ctx = useContext(AuthContext);
+    if (!ctx) throw new Error ("useAuth must be used within an AuthProvider");
+    return ctx;
+};
