@@ -22,7 +22,7 @@ async function request(path, options = {}) {
 export const registerUser = ({ email, password, username }) =>
   request("/register", {
     method: "POST",
-    bosy: JSON.stringify({ email, password, username }),
+    body: JSON.stringify({ email, password, username }),
   });
 
 export const loginUser = ({ email, password }) =>

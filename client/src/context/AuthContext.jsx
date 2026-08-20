@@ -7,7 +7,7 @@ const TOKEN_KEY = "breeze_token";
 const USER_KEY = "breeze_user";
 
 export const AuthProvider = ({children}) => {
-    const [token, setToke] = useState(() => localStorage.getItem(TOKEN_KEY));
+    const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
     const [user, setUser] = useState(() => {
         const stored = localStorage.getItem(USER_KEY);
         return stored ? JSON.parse(stored) : null;
@@ -57,7 +57,7 @@ export const AuthProvider = ({children}) => {
     }, []);
 
     const login = async ({email, password}) => {
-        const data = await loginUse({email, password});
+        const data = await loginUser({email, password});
         persistSession(data.token, data.user);
         return data.user;
     };
