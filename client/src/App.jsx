@@ -1,8 +1,11 @@
 import { useAuth } from "./context/AuthContext";
+import {useNav} from "./context/NavContext";
+import Navbar from "./components/layout/Navbar";
 import AuthPage from "./components/auth/AuthPage";
 
 const App = () => {
-  const {isAuthenticated, loading, user, logout} = useAuth();
+  const {isAuthenticated, loading} = useAuth();
+  const {view} = useNav();
 
   if (loading) {
     return (
@@ -12,8 +15,8 @@ const App = () => {
     );
   }
 
-  if (!isAuthenticated) {
-    return <AuthPage/>
+  if (view.name === "auth" && !isAuthenticated) {
+    return <AuthPage/>;
   }
 
   return (
