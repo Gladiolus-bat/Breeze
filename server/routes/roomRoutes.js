@@ -1,13 +1,13 @@
 import express from "express";
 import protect, {restrictTo} from "../middleware/authMiddleware.js";
 import upload from "../middleware/upload.js";
-import {createRoom, getRooms, getOwnerRooms, toogleRoomAvailability} from "../controllers/roomController.js";
+import {createRoom, getRooms, getOwnerRooms, toggleRoomAvailability} from "../controllers/roomController.js";
 
 const roomRouter = express.Router();
 
 roomRouter.post("/", protect, restrictTo("admin"), upload.array("images", 4), createRoom);
 roomRouter.get("/", getRooms);
 roomRouter.get("/owner", protect, restrictTo("admin"), getOwnerRooms);
-roomRouter.post("/toggle-availability", protect, restrictedTo("admin"), toogleRoomAvailability);
+roomRouter.post("/toggle-availability", protect, restrictTo("admin"), toggleRoomAvailability);
 
 export default roomRouter;
