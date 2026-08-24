@@ -8,7 +8,7 @@ const uploadToCloudinary = (fileBuffer) => {
             { folder: "breeze/rooms"},
             (error, result) => {
                 if(error) return reject(error);
-                reslove(result.secure_url);
+                resolve(result.secure_url);
             },
         );
         stream.end(fileBuffer);
