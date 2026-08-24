@@ -1,11 +1,17 @@
 import { useAuth } from "./context/AuthContext";
-import {useNav} from "./context/NavContext";
+import { useNav } from "./context/NavContext";
 import Navbar from "./components/layout/Navbar";
 import AuthPage from "./components/auth/AuthPage";
+import HomePage from "./components/pages/HomePage";
+import RoomsPage from "./components/pages/RoomsPage";
+import RoomDetailPage from "./components/pages/RoomDetailPage";
+import MyBookingsPage from "./components/pages/MyBookingsPage";
+import BecomeHostPage from "./components/pages/BecomeHostPage";
+import OwnerDashboard from "./components/owner/OwnerDashboard";
 
 const App = () => {
-  const {isAuthenticated, loading} = useAuth();
-  const {view} = useNav();
+  const { isAuthenticated, loading } = useAuth();
+  const { view } = useNav();
 
   if (loading) {
     return (
@@ -16,20 +22,31 @@ const App = () => {
   }
 
   if (view.name === "auth" && !isAuthenticated) {
-    return <AuthPage/>;
+    return <AuthPage />;
   }
 
+  const renderView = () => {
+    switch (view.name) {
+      case "rooms":
+        return <RoomsPage />;
+      case "roomDetail":
+        return <RoomDetailPage roomId={view.roomId} />;
+      case "myBookings":
+        return isAuthenticated ? <MyBookingsPage /> : <AuthPage />;
+      case "becomeHost":
+        return isAuthenticated ? <BecomeHostPage /> : <AuthPage />;
+      case "ownerDashboard":
+        return isAuthenticated ? <OwnerDashboard /> : <AuthPage />;
+      case "home":
+      default:
+        return <HomePage />;
+    }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-tertiary px-4">
-      <h1 className="text-2xl font-playfair text-primary">
-        Welcome, {user.username || user.email}
-      </h1>
-      <p className="text-gray-600">Role: {user.role}</p>
-      <button
-      onClick={logout}
-      className="bg-primary text-white rounded-lg px-4 py-2 hover:opacity-90 transition">
-        Log Out
-      </button>
+    <div className="min-h-screen bg-tertiary">
+      <Navbar />
+      {renderView()}
     </div>
   );
 };
