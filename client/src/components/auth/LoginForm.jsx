@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
-const LoginForm = ({onSwitchToRegister}) => {
+const LoginForm = ({onSwitchToRegister, initialEmail = "", notice = ""}) => {
     const {login} = useAuth();
     const [form, setForm] = useState({email: "", password: ""});
     const [error, setError] = useState("");
@@ -29,6 +29,12 @@ const LoginForm = ({onSwitchToRegister}) => {
         className="w-full max-w-sm mx-auto flex flex-col gap-4 bg-neutral p-8 rounded-2xl shadow-sm">
             <h2 className="text-2xl font-playfair text-primary">Welcome Back</h2>
             
+            {notice && (
+                <p className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                    {notice}
+                </p>
+            )}
+
             {error && (
                 <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
                     {error}

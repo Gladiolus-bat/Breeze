@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
-const RegisterForm = ({ onSwitchToLogin }) => {
+const RegisterForm = ({ onSwitchToLogin, onRegisterSuccess }) => {
     const { register } = useAuth();
     const [form, setForm] = useState({ username: "", email: "", password: "" });
     const [error, setError] = useState("");
@@ -23,6 +23,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
         setSubmitting(true);
         try {
             await register(form);
+            onRegisterSuccess(form.email);
         } catch (error) {
             setError(error.message);
         } finally {
