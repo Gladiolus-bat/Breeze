@@ -66,7 +66,8 @@ const RegisterForm = ({ onSwitchToLogin, onRegisterSuccess }) => {
                 <input
                     type="password"
                     name="password"
-                    requiredminLength={8}
+                    required
+                    minLength={8}
                     value={form.password}
                     onChange={handleChange}
                     placeholder="At least 8 characters"

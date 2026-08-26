@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 
 const LoginForm = ({onSwitchToRegister, initialEmail = "", notice = ""}) => {
     const {login} = useAuth();
-    const [form, setForm] = useState({email: "", password: ""});
+    const [form, setForm] = useState({email: initialEmail, password: ""});
     const [error, setError] = useState("");
     const [submitting, setSubmitting] = useState(false);
 
@@ -49,7 +49,7 @@ const LoginForm = ({onSwitchToRegister, initialEmail = "", notice = ""}) => {
                 required
                 value={form.email}
                 onChange={handleChange}
-                placeholder="hane@example.com"
+                placeholder="jane@example.com"
                 className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"/>
             </label>
 
