@@ -82,7 +82,7 @@ export const createBooking = async (req, res) => {
 // GET /api/bookings/user (booking made by logged-in user)
 export const getUserBookings = async (req, res) => {
     try {
-        const bookings = (await Booking.find({user: req.user._id}).populate("room").populate("hotel")).toSorted({createdAt: -1});
+        const bookings = await Booking.find({user: req.user._id}).populate("room").populate("hotel").sort({createdAt: -1});
 
         res.json({success: true, bookings});
     } catch (error) {
@@ -98,7 +98,7 @@ export const getHotelBookings = async (req, res) => {
             return res.status(404).json({success: false, message: "No hotel found for this account."});
         }
 
-        const bookings = (await Booking.find({hotel: hotel._id}).populate("room").populate("user", "username email image")).toSorted({createdAt: -1});
+        const bookings = await Booking.find({hotel: hotel._id}).populate("room").populate("user", "username email image").sort({createdAt: -1});
 
         const totalBookings = bookings.length;
         const totalRevenue = bookings.reduce((sum, b) => sum + b.totalPrice, 0);

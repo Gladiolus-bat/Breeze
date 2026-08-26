@@ -41,7 +41,7 @@ const bookingSchema = new mongoose.Schema(
         paymentMethod: {
             type: String,
             enum: ["Pay At Hotel", "Esewa"],
-            default: "Pay at Hotel",
+            default: "Pay At Hotel",
         },
         isPaid: {
             type: Boolean,

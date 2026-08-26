@@ -28,6 +28,11 @@ export const createRoom = async (req, res) => {
             return res.status(400).json({ success: false, message: "At least one room image is required."});
         }
 
+        const hotel = await Hotel.findOne({ owner: req.user._id });
+        if (!hotel) {
+            return res.status(404).json({ success: false, message: "No hotel found for this account. Register a hotel first." });
+        }
+
         const images = await Promise.all(req.files.map((file) => uploadToCloudinary(file.buffer)));
 
         // services can be entered as an array
@@ -69,7 +74,7 @@ export const getOwnerRooms = async (req, res) => {
             return res.status(404).json({success: false, message: "No hotel found for this account"});
         }
 
-        const rooms = (await Room.find({hotel: hotel._id}).populate("hotel")).toSorted({createdAt: -1});
+        const rooms = await Room.find({hotel: hotel._id}).populate("hotel").sort({createdAt: -1});
 
         res.json({success: true, rooms});
     } catch (error) {
