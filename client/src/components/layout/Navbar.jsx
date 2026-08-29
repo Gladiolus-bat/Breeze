@@ -44,6 +44,21 @@ const Navbar = () => {
                         </button>
                     )}
 
+                    {isAuthenticated && (
+                        <button
+                            onClick={() => navigate("profile")}
+                            className="h-8 w-8 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0"
+                            title="Profile">
+                            {user?.image ? (
+                                <img src={user.image} alt={user.username} className="w-full h-full object-cover" />
+                            ) : (
+                                <span className="w-full h-full flex items-center justify-center text-xs text-gray-500">
+                                    {user?.username?.[0]?.toUpperCase() || "?"}
+                                </span>
+                            )}
+                        </button>
+                    )}
+
                     {isAuthenticated ? (
                         <button
                             onClick={logout}

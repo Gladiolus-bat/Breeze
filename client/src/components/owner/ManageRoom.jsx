@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { getOwnerRooms, toggleRoomAvailability } from "../../api/rooms";
 import { useAuth } from "../../context/AuthContext";
+import { useNav } from "../../context/NavContext";
 
 const ManageRooms = () => {
     const { token } = useAuth();
+    const { navigate } = useNav();
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -48,6 +50,11 @@ const ManageRooms = () => {
                         <h3 className="font-playfair text-primary">{room.roomType}</h3>
                         <p className="text-sm text-gray-500">${room.pricePerNight} / night</p>
                     </div>
+                    <button
+                        onClick={() => navigate("editRoom", { roomId: room._id })}
+                        className="text-sm border border-primary text-primary rounded-lg px-3 py-1.5 hover:bg-secondary transition">
+                        Edit
+                    </button>
                     <button
                         onClick={() => handleToggle(room._id)}
                         disabled={togglingId === room._id}
