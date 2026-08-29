@@ -1,6 +1,7 @@
 import { useAuth } from "./context/AuthContext";
 import { useNav } from "./context/NavContext";
 import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
 import AuthPage from "./components/auth/AuthPage";
 import HomePage from "./components/pages/HomePage";
 import RoomsPage from "./components/pages/RoomsPage";
@@ -50,9 +51,10 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-tertiary">
+    <div className="min-h-screen bg-tertiary flex flex-col">
       <Navbar />
-      {renderView()}
+      <div className="flex-1">{renderView()}</div>
+      <Footer />
     </div>
   );
 };
