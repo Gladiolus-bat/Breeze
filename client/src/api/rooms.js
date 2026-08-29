@@ -21,3 +21,12 @@ export const toggleRoomAvailability = (roomId, token) =>
     body: JSON.stringify({ roomId }),
     token,
   });
+
+// Admin only — formData may include roomType, pricePerNight, services, and/or new images
+export const updateRoom = (roomId, formData, token) =>
+  apiRequest(`/rooms/${roomId}`, {
+    method: "PUT",
+    body: formData,
+    token,
+    isFormData: true,
+  });

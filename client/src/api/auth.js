@@ -2,10 +2,12 @@ const API_BASE =
   import.meta.env.VITE_API_URL || "http://localhost:3000/api/user";
 
 async function request(path, options = {}) {
+  const isFormData = options.body instanceof FormData;
+
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...(options.headers || {}),
     },
   });
@@ -35,5 +37,20 @@ export const loginUser = ({ email, password }) =>
 export const fetchCurrentUser = (token) =>
   request("/", {
     method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+// formData may include username and/or an image file
+export const updateProfile = (formData, token) =>
+  request("/profile", {
+    method: "PUT",
+    body: formData,
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const changePassword = ({ currentPassword, newPassword }, token) =>
+  request("/change-password", {
+    method: "PUT",
+    body: JSON.stringify({ currentPassword, newPassword }),
     headers: { Authorization: `Bearer ${token}` },
   });
