@@ -1,19 +1,6 @@
 import Room from "../models/Room.js";
 import Hotel from "../models/Hotel.js";
-import cloudinary from "../configs/cloudinary.js";
-
-const uploadToCloudinary = (fileBuffer) => {
-    return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-            { folder: "breeze/rooms"},
-            (error, result) => {
-                if(error) return reject(error);
-                resolve(result.secure_url);
-            },
-        );
-        stream.end(fileBuffer);
-    });
-};
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 
 // POST /api/rooms (only admin access)
 export const createRoom = async (req, res) => {
@@ -33,7 +20,7 @@ export const createRoom = async (req, res) => {
             return res.status(404).json({ success: false, message: "No hotel found for this account. Register a hotel first." });
         }
 
-        const images = await Promise.all(req.files.map((file) => uploadToCloudinary(file.buffer)));
+        const images = await Promise.all(req.files.map((file) => uploadToCloudinary(file.buffer, "breeze/rooms")));
 
         // services can be entered as an array
         const parsedServices = Array.isArray(services) ? services: typeof services === "string" ? services.split(",").map((a) => a.trim()).filter(Boolean): [];
@@ -82,7 +69,43 @@ export const getOwnerRooms = async (req, res) => {
     }
 };
 
-// POST /api/rooms/toggle-availability (admin only)
+// PUT /api/rooms/:roomId (admin only, must own the room's hotel)
+export const updateRoom = async (req, res) => {
+    try {
+        const { roomId } = req.params;
+        const { roomType, pricePerNight, services } = req.body;
+
+        const room = await Room.findById(roomId).populate("hotel");
+        if (!room) {
+            return res.status(404).json({success: false, message: "Room not found."});
+        }
+
+        if (room.hotel.owner !== req.user._id) {
+            return res.status(403).json({success: false, message: "You do not own this room."});
+        }
+
+        if (roomType) room.roomType = roomType;
+        if (pricePerNight) room.pricePerNight = Number(pricePerNight);
+        if (services !== undefined) {
+            room.services = Array.isArray(services)
+                ? services
+                : typeof services === "string"
+                    ? services.split(",").map((a) => a.trim()).filter(Boolean)
+                    : room.services;
+        }
+
+        // Only replace images if new ones were uploaded — otherwise keep the existing ones
+        if (req.files && req.files.length > 0) {
+            room.images = await Promise.all(req.files.map((file) => uploadToCloudinary(file.buffer, "breeze/rooms")));
+        }
+
+        await room.save();
+
+        res.json({success: true, message: "Room updated", room});
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message});
+    }
+};
 export const toggleRoomAvailability = async (req, res) => {
     try {
         const {roomId} = req.body;
