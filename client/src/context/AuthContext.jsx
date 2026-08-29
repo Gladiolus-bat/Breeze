@@ -33,11 +33,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const data = await fetchCurrentUser(token);
             setUser((prev) => {
-                const merged = {
-                    ...prev,
-                    role: data.role,
-                    recentSearchedCities: data.recentSearchedCities,
-                };
+                const merged = { ...prev, ...data.user };
                 localStorage.setItem(USER_KEY, JSON.stringify(merged));
                 return merged;
             });
