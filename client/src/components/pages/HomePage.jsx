@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNav } from "../../context/NavContext";
 import { getRooms } from "../../api/rooms";
 import RoomCard from "../rooms/RoomCard";
-import heroImage from "../../assets/hero.svg";
+import heroImage from "../../assets/hero.jpg";
 
 const HomePage = () => {
   const { navigate } = useNav();
