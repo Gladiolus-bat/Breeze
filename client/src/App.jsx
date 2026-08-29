@@ -7,7 +7,9 @@ import RoomsPage from "./components/pages/RoomsPage";
 import RoomDetailPage from "./components/pages/RoomDetailPage";
 import MyBookingsPage from "./components/pages/MyBookingsPage";
 import BecomeHostPage from "./components/pages/BecomeHostPage";
+import ProfilePage from "./components/pages/ProfilePage";
 import OwnerDashboard from "./components/owner/OwnerDashboard";
+import EditRoomForm from "./components/owner/EditRoomForm";
 
 const App = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -37,6 +39,10 @@ const App = () => {
         return isAuthenticated ? <BecomeHostPage /> : <AuthPage />;
       case "ownerDashboard":
         return isAuthenticated ? <OwnerDashboard /> : <AuthPage />;
+      case "editRoom":
+        return isAuthenticated ? <EditRoomForm roomId={view.roomId} /> : <AuthPage />;
+      case "profile":
+        return isAuthenticated ? <ProfilePage /> : <AuthPage />;
       case "home":
       default:
         return <HomePage />;
